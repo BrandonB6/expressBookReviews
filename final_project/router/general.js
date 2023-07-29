@@ -12,16 +12,49 @@ public_users.post("/register", (req,res) => {
 
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    const all_books = new Promise((resolve,reject)=>{
+
+        if(books){
+          // return res.status(300).json(books);
+          resolve(books)
+        }
+        else
+        {
+          // return res.status(404).json({message: 'No list of the books found'})
+          reject({error: 'No Book Library was found'})
+        }
+      })
+    
+      all_books.then((resp)=>{
+        return res.status(200).json(resp);
+      }).catch(err=>res.status(403).json({error: err}))
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
- });
+    let ISBN = req.params.isbn
+
+    const book_by_isbn = new Promise((resolve, reject)=>{
   
+      let book = books[ISBN]
+      if(book)
+      {
+        // res.status(200).json(book)
+        resolve(book)
+      }
+      else{
+        // res.status(404).json({message: `No Book is found for the ISBN: ${ISBN}`})
+        reject({error: `No Book is found for the ISBN: ${ISBN}`})
+      }
+    })
+  
+    book_by_isbn.then((resp)=>{
+      res.status(200).json(resp)
+    }).catch(err=>res.status(403).json({error: err}))
+    
+    
+   });
+   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   //Write your code here
